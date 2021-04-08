@@ -6,8 +6,8 @@ const router = express.Router();
 const nasaUrl = 'https://api.nasa.gov/planetary/earth/imagery';
 
 router.get('/api/earth', async (req, res) => {
-  let longitude = req.query.lon;
-  let latitude = req.query.lat;
+  const longitude = req.query.lon;
+  const latitude = req.query.lat;
 
   if (!longitude && !latitude) {
     throw new BadRequestError('Missing query parameters');
@@ -22,7 +22,6 @@ router.get('/api/earth', async (req, res) => {
       },
       responseType: 'arraybuffer',
     });
-    console.log(response.headers['content-length']);
     res.header(response.headers).send(response.data);
   } catch (err) {
     console.log(err);
