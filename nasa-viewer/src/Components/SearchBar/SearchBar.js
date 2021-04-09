@@ -58,6 +58,7 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
           inputRoot: styles.inputRoot,
           inputFocused: styles.inputFocused,
         }}
+        filterOptions={(options, object) => options}
         freeSolo
         value={value}
         onChange={(event, newValue) => {

@@ -14,7 +14,6 @@ router.get('/api/earth', async (req, res) => {
   }
 
   try {
-    console.log('new request  ');
     const response = await axios.get(nasaUrl, {
       params: {
         lon: longitude,
