@@ -18,7 +18,7 @@ router.get('/api/search', async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://nominatim.openstreetmap.org/search?q=${searchQuery}&format=geocodejson&limit=5`
+      `https://nominatim.openstreetmap.org/search?city=${searchQuery}&format=geocodejson&limit=5`
     );
     res.send(createResults(response.data));
   } catch (err) {

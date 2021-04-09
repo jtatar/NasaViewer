@@ -14,11 +14,13 @@ router.get('/api/earth', async (req, res) => {
   }
 
   try {
+    console.log('new request  ');
     const response = await axios.get(nasaUrl, {
       params: {
         lon: longitude,
         lat: latitude,
         api_key: process.env.NASA_API_KEY,
+        date: new Date().toISOString().split('T')[0],
       },
       responseType: 'arraybuffer',
     });
