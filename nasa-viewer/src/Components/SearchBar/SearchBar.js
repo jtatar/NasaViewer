@@ -55,12 +55,13 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
 
   const useStyles = makeStyles({
     root: {
-      background: searchBarColor,
+      background: `${searchBarColor} !important`,
+      transition: null,
       '&:hover': {
-        background: searchBarColor,
+        background: `${searchBarColor} !important`,
       },
       '&:focus': {
-        background: searchBarColor,
+        background: `${searchBarColor} !important`,
       },
     },
   });
