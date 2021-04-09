@@ -30,7 +30,8 @@ const NasaViewer = ({ requestUrl }) => {
       setLongitude(lon);
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      setLoading(false);
+      console.log(err.message);
     }
   };
 

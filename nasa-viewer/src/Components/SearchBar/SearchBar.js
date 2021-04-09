@@ -4,43 +4,16 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import './SearchBar.scss';
+import { CircularProgress } from '@material-ui/core';
 
 const SearchBar = ({ requestUrl, getNewImage }) => {
   const [value, setValue] = useState('');
   const [query, setQuery] = useState('');
   const [searchResults, setsearchResult] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const searchBarColor = '#121212';
-
-  const useStyles = makeStyles({
-    inputRoot: {
-      background: searchBarColor,
-      '&:hover': {
-        background: searchBarColor,
-      },
-    },
-    inputFocused: {
-      background: searchBarColor,
-    },
-    root: {
-      background: searchBarColor,
-    },
-  });
-
-  const styles = useStyles();
-
-  const getNewResult = async (searchQuery) => {
-    try {
-      const response = await axios.get(`${requestUrl}/api/search`, {
-        params: {
-          q: searchQuery,
-        },
-      });
-      setsearchResult(response.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   useEffect(() => {
     const selectedPlace = searchResults.filter((place) => place.name === value);
@@ -51,23 +24,76 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
     }
   }, [value]);
 
+  useEffect(() => {
+    let active = true;
+    if (!loading || !open) {
+      return undefined;
+    }
+
+    (async () => {
+      const response = await axios.get(`${requestUrl}/api/search`, {
+        params: {
+          q: query,
+        },
+      });
+      if (active) {
+        setsearchResult(response.data);
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if (!open) {
+      setsearchResult([]);
+    }
+  }, [open]);
+
+  const useStyles = makeStyles({
+    root: {
+      background: searchBarColor,
+      '&:hover': {
+        background: searchBarColor,
+      },
+      '&:focus': {
+        background: searchBarColor,
+      },
+    },
+  });
+
+  const styles = useStyles();
+
   return (
     <div className="searchBarWrapper">
       <Autocomplete
         classes={{
-          inputRoot: styles.inputRoot,
-          inputFocused: styles.inputFocused,
+          inputRoot: styles.root,
+          inputFocused: styles.root,
         }}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        loading={loading}
         filterOptions={(options, object) => options}
         freeSolo
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
+          setLoading(false);
         }}
         inputValue={query}
         onInputChange={(event, newValue) => {
           setQuery(newValue);
-          getNewResult(newValue);
+          if (newValue.length != 0) {
+            setLoading(true);
+          }
         }}
         options={searchResults.map((option) => option.name)}
         renderInput={(params) => (
@@ -79,7 +105,17 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
             label="Search for place.."
             margin="normal"
             variant="filled"
-            InputProps={{ ...params.InputProps, type: 'search' }}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <React.Fragment>
+                  {loading && open ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </React.Fragment>
+              ),
+            }}
           />
         )}
       />

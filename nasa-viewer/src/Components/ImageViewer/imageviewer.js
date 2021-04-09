@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ImageViewer = ({ imageSrc, loading }) => {
   return (
-    <div>
+    <div className="imageWrapper">
       {loading ? (
         <div className="loading">
           <CircularProgress />
@@ -13,7 +13,7 @@ const ImageViewer = ({ imageSrc, loading }) => {
       ) : null}
       <TransformWrapper
         options={{ limitToBounds: false }}
-        wheel={{ disabled: true }}
+        wheel={{ disabled: false, step: 100 }}
         doubleClick={{ mode: 'reset' }}
       >
         <TransformComponent>

@@ -1,11 +1,16 @@
-.loading {
-  position: absolute;
-  z-index: 10;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  width: 200px;
-  height: 200px;
+.imageWrapper {
+  cursor: pointer;
+
+  .loading {
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 200px;
+    height: 200px;
+    cursor: default;
+  }
 }
