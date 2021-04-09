@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import './SearchBar.scss';
 
@@ -11,9 +10,20 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
   const [query, setQuery] = useState('');
   const [searchResults, setsearchResult] = useState([]);
 
+  const searchBarColor = '#121212';
+
   const useStyles = makeStyles({
     inputRoot: {
-      background: '#121212',
+      background: searchBarColor,
+      '&:hover': {
+        background: searchBarColor,
+      },
+    },
+    inputFocused: {
+      background: searchBarColor,
+    },
+    root: {
+      background: searchBarColor,
     },
   });
 
@@ -33,12 +43,10 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
   };
 
   useEffect(() => {
-    console.log('value has been set');
     const selectedPlace = searchResults.filter((place) => place.name === value);
     if (selectedPlace.length > 0) {
       const lon = selectedPlace[0].coordinates[0];
       const lat = selectedPlace[0].coordinates[1];
-      console.log(`lat: ${lat} + lon: ${lon}`);
       getNewImage(lon, lat);
     }
   }, [value]);
@@ -48,6 +56,7 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
       <Autocomplete
         classes={{
           inputRoot: styles.inputRoot,
+          inputFocused: styles.inputFocused,
         }}
         freeSolo
         value={value}
@@ -63,6 +72,9 @@ const SearchBar = ({ requestUrl, getNewImage }) => {
         renderInput={(params) => (
           <TextField
             {...params}
+            classes={{
+              root: styles.root,
+            }}
             label="Search for place.."
             margin="normal"
             variant="filled"
